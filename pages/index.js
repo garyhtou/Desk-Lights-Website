@@ -1,209 +1,284 @@
-import Head from 'next/head'
+import Head from "next/head";
+import { useState } from "react";
+import { SketchPicker } from "react-color";
+import firebase from "firebase/app";
+import "firebase/database";
 
 export default function Home() {
-  return (
-    <div className="container">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+	if (!firebase.apps.length) {
+		firebase.initializeApp({
+			apiKey: "AIzaSyBvMgMnlTeE3dzV-gWNeFCx0Y7noPDRChQ",
+			authDomain: "desk-lights-5a43a.firebaseapp.com",
+			databaseURL: "https://desk-lights-5a43a-default-rtdb.firebaseio.com",
+			projectId: "desk-lights-5a43a",
+			storageBucket: "desk-lights-5a43a.appspot.com",
+			messagingSenderId: "1020303207331",
+			appId: "1:1020303207331:web:1710f9c1889e78eacf0816",
+			measurementId: "G-3Q4FL79CTF",
+		});
+	}
 
-      <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+	const [state, setState] = useState({
+		color: {
+			r: "0",
+			g: "0",
+			b: "255",
+		},
+	});
 
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
+	const handleChange = async (color) => {
+		console.log("UPDATE");
+		setState({ ...state, color: color.rgb });
+		firebase.database().ref("rgbw").update(color.rgb);
+	};
 
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+	// firebase
+	// 	.database()
+	// 	.ref("rgbw")
+	// 	.on(
+	// 		"value",
+	// 		function (snapshot) {
+	// 			if (snapshot.exists()) {
+	// 				const values = snapshot.val();
+	// 				const newColors = { r: values.r, g: values.g, b: values.b };
+	// 				console.log("PULL COLORS");
 
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+	// 				if (
+	// 					newColors.r != state.color.r ||
+	// 					newColors.g != state.color.g ||
+	// 					newColors.b != state.color.b
+	// 				) {
+	// 					setState({
+	// 						...state,
+	// 						color: { r: values.r, g: values.g, b: values.b },
+	// 					});
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+	// 					console.log("CHANGES IN PULLED COLORS");
+	// 					console.log(newColors);
+	// 				} else {
+	// 					console.log("NO CHANGES IN PULLED COLORS");
+	// 				}
+	// 			}
+	// 		}.bind(this)
+	// 	)
+	// 	.bind(this);
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+	return (
+		<div className="container">
+			<Head>
+				<title>Gary's TikTok Lights</title>
+				<link rel="icon" href="/favicon.png" />
+			</Head>
 
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
-      </footer>
+			<main>
+				<h1 className="title">
+					Welcome to{" "}
+					<span
+						style={{
+							color:
+								"rgb(" +
+								state.color.r +
+								"," +
+								state.color.g +
+								"," +
+								state.color.b +
+								")",
+						}}
+					>
+						Gary's TikTok Lights
+					</span>
+					!
+				</h1>
 
-      <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
+				<p className="description">
+					🚦 It's time for you to control the colors 🎄
+				</p>
 
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
+				<div className="select">
+					<SketchPicker
+						color={state.color}
+						onChange={handleChange}
+						disableAlpha
+					/>
+				</div>
+			</main>
 
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+			<footer>
+				<p>
+					<span>
+						<a
+							className="gh-link"
+							href="https://github.com/garytou2/Desk-Lights"
+						>
+							Desk-Lights
+						</a>{" "}
+						&{" "}
+						<a
+							className="gh-link"
+							href="https://github.com/garytou2/Desk-Lights-Website"
+						>
+							Desk-Lights-Website
+						</a>
+						{/* <GithubOutlined /> */}
+					</span>
+					<span className="credit-sep">|</span>
+					Developed by <a href="https://garytou.com">Gary Tou</a>
+				</p>
+			</footer>
 
-        footer img {
-          margin-left: 0.5rem;
-        }
+			<style jsx>{`
+				.select {
+					margin-top: 10vh;
+				}
 
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+				.gh-link {
+					color: inherit;
+				}
 
-        a {
-          color: inherit;
-          text-decoration: none;
-        }
+				.credit-sep {
+					padding: 0 10px;
+					font-weight: bolder;
+				}
 
-        .title a {
-          color: #0070f3;
-          text-decoration: none;
-        }
+				.container {
+					min-height: 100vh;
+					padding: 0 0.5rem;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+				}
 
-        .title a:hover,
-        .title a:focus,
-        .title a:active {
-          text-decoration: underline;
-        }
+				main {
+					padding: 5rem 0;
+					flex: 1;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+				}
 
-        .title {
-          margin: 0;
-          line-height: 1.15;
-          font-size: 4rem;
-        }
+				footer {
+					width: 100%;
+					height: 100px;
+					border-top: 1px solid #eaeaea;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
 
-        .title,
-        .description {
-          text-align: center;
-        }
+				footer a {
+					color: blue;
+					font-weight: bolder;
+				}
 
-        .description {
-          line-height: 1.5;
-          font-size: 1.5rem;
-        }
+				a {
+					color: inherit;
+					text-decoration: none;
+				}
 
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-            DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-        }
+				.title a {
+					color: #0070f3;
+					text-decoration: none;
+				}
 
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
+				.title a:hover,
+				.title a:focus,
+				.title a:active {
+					text-decoration: underline;
+				}
 
-          max-width: 800px;
-          margin-top: 3rem;
-        }
+				.title {
+					margin: 0;
+					line-height: 1.15;
+					font-size: 4rem;
+				}
 
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
-          text-align: left;
-          color: inherit;
-          text-decoration: none;
-          border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
+				.title,
+				.description {
+					text-align: center;
+				}
 
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
+				.description {
+					line-height: 1.5;
+					font-size: 1.5rem;
+				}
 
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
-        }
+				code {
+					background: #fafafa;
+					border-radius: 5px;
+					padding: 0.75rem;
+					font-size: 1.1rem;
+					font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
+						DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+				}
 
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
-        }
+				.grid {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					flex-wrap: wrap;
 
-        .logo {
-          height: 1em;
-        }
+					max-width: 800px;
+					margin-top: 3rem;
+				}
 
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
-          }
-        }
-      `}</style>
+				.card {
+					margin: 1rem;
+					flex-basis: 45%;
+					padding: 1.5rem;
+					text-align: left;
+					color: inherit;
+					text-decoration: none;
+					border: 1px solid #eaeaea;
+					border-radius: 10px;
+					transition: color 0.15s ease, border-color 0.15s ease;
+				}
 
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
+				.card:hover,
+				.card:focus,
+				.card:active {
+					color: #0070f3;
+					border-color: #0070f3;
+				}
 
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
-    </div>
-  )
+				.card h3 {
+					margin: 0 0 1rem 0;
+					font-size: 1.5rem;
+				}
+
+				.card p {
+					margin: 0;
+					font-size: 1.25rem;
+					line-height: 1.5;
+				}
+
+				.logo {
+					height: 1em;
+				}
+
+				@media (max-width: 600px) {
+					.grid {
+						width: 100%;
+						flex-direction: column;
+					}
+				}
+			`}</style>
+
+			<style jsx global>{`
+				html,
+				body {
+					padding: 0;
+					margin: 0;
+					font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+						Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+						sans-serif;
+				}
+
+				* {
+					box-sizing: border-box;
+				}
+			`}</style>
+		</div>
+	);
 }
