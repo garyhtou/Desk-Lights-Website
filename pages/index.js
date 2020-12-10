@@ -4,7 +4,8 @@ import { SketchPicker } from "react-color";
 import firebase from "firebase/app";
 import "firebase/database";
 
-export default function Home() {
+export default function Home({ initColors }) {
+	// init app for Firebase Database connection
 	if (!firebase.apps.length) {
 		firebase.initializeApp({
 			apiKey: "AIzaSyBvMgMnlTeE3dzV-gWNeFCx0Y7noPDRChQ",
@@ -18,12 +19,40 @@ export default function Home() {
 		});
 	}
 
+	// state for current color
 	const [state, setState] = useState({
-		color: {
-			r: "0",
-			g: "0",
-			b: "255",
-		},
+		color: initColors,
+	});
+
+	// Update state if there are changes to the color in the database.
+	React.useEffect(() => {
+		firebase
+			.database()
+			.ref("rgbw")
+			.on("value", function (snapshot) {
+				if (snapshot.exists()) {
+					const values = snapshot.val();
+					const newColors = { r: values.r, g: values.g, b: values.b };
+					console.log("PULL COLORS");
+
+					// this if is required to prevent infinite update cycle.
+					if (
+						newColors.r != state.color.r ||
+						newColors.g != state.color.g ||
+						newColors.b != state.color.b
+					) {
+						setState({
+							...state,
+							color: { r: values.r, g: values.g, b: values.b },
+						});
+
+						console.log("CHANGES IN PULLED COLORS");
+						console.log(newColors);
+					} else {
+						console.log("NO CHANGES IN PULLED COLORS");
+					}
+				}
+			});
 	});
 
 	const handleChange = async (color) => {
@@ -31,37 +60,6 @@ export default function Home() {
 		setState({ ...state, color: color.rgb });
 		firebase.database().ref("rgbw").update(color.rgb);
 	};
-
-	// firebase
-	// 	.database()
-	// 	.ref("rgbw")
-	// 	.on(
-	// 		"value",
-	// 		function (snapshot) {
-	// 			if (snapshot.exists()) {
-	// 				const values = snapshot.val();
-	// 				const newColors = { r: values.r, g: values.g, b: values.b };
-	// 				console.log("PULL COLORS");
-
-	// 				if (
-	// 					newColors.r != state.color.r ||
-	// 					newColors.g != state.color.g ||
-	// 					newColors.b != state.color.b
-	// 				) {
-	// 					setState({
-	// 						...state,
-	// 						color: { r: values.r, g: values.g, b: values.b },
-	// 					});
-
-	// 					console.log("CHANGES IN PULLED COLORS");
-	// 					console.log(newColors);
-	// 				} else {
-	// 					console.log("NO CHANGES IN PULLED COLORS");
-	// 				}
-	// 			}
-	// 		}.bind(this)
-	// 	)
-	// 	.bind(this);
 
 	return (
 		<div className="container">
@@ -87,7 +85,6 @@ export default function Home() {
 					>
 						Gary's TikTok Lights
 					</span>
-					!
 				</h1>
 
 				<p className="description">
@@ -101,6 +98,17 @@ export default function Home() {
 						disableAlpha
 					/>
 				</div>
+				<p style={{ textAlign: "center", marginTop: "2em", marginBottom: 0 }}>
+					<strong>Tip:</strong> The top right corner provides the brightest
+					colors and black turns the LEDs off.
+					<br />
+					Why? Because I can't make the LEDs turn black! The saturation is
+					representative of brightness.
+				</p>
+				<p>
+					See the color picker randomly changing? That's other people messing
+					with my lights!
+				</p>
 			</main>
 
 			<footer>
@@ -119,7 +127,6 @@ export default function Home() {
 						>
 							Desk-Lights-Website
 						</a>
-						{/* <GithubOutlined /> */}
 					</span>
 					<span className="credit-sep">|</span>
 					Developed by <a href="https://garytou.com">Gary Tou</a>
@@ -177,14 +184,13 @@ export default function Home() {
 					text-decoration: none;
 				}
 
-				.title a {
-					color: #0070f3;
+				.title span {
 					text-decoration: none;
 				}
 
-				.title a:hover,
-				.title a:focus,
-				.title a:active {
+				.title span:hover,
+				.title span:focus,
+				.title span:active {
 					text-decoration: underline;
 				}
 
@@ -202,66 +208,6 @@ export default function Home() {
 				.description {
 					line-height: 1.5;
 					font-size: 1.5rem;
-				}
-
-				code {
-					background: #fafafa;
-					border-radius: 5px;
-					padding: 0.75rem;
-					font-size: 1.1rem;
-					font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-						DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-				}
-
-				.grid {
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					flex-wrap: wrap;
-
-					max-width: 800px;
-					margin-top: 3rem;
-				}
-
-				.card {
-					margin: 1rem;
-					flex-basis: 45%;
-					padding: 1.5rem;
-					text-align: left;
-					color: inherit;
-					text-decoration: none;
-					border: 1px solid #eaeaea;
-					border-radius: 10px;
-					transition: color 0.15s ease, border-color 0.15s ease;
-				}
-
-				.card:hover,
-				.card:focus,
-				.card:active {
-					color: #0070f3;
-					border-color: #0070f3;
-				}
-
-				.card h3 {
-					margin: 0 0 1rem 0;
-					font-size: 1.5rem;
-				}
-
-				.card p {
-					margin: 0;
-					font-size: 1.25rem;
-					line-height: 1.5;
-				}
-
-				.logo {
-					height: 1em;
-				}
-
-				@media (max-width: 600px) {
-					.grid {
-						width: 100%;
-						flex-direction: column;
-					}
 				}
 			`}</style>
 
@@ -281,4 +227,26 @@ export default function Home() {
 			`}</style>
 		</div>
 	);
+}
+
+// Pre-fill current color of LEDs before sending to client
+export async function getServerSideProps() {
+	const snapshot = await firebase.database().ref("rgbw").once("value");
+
+	// default colors in case of firebase failure.
+	var initColors = {
+		r: "0",
+		g: "0",
+		b: "255",
+	};
+
+	if (snapshot.exists()) {
+		initColors = {
+			r: snapshot.val().r,
+			g: snapshot.val().g,
+			b: snapshot.val().b,
+		};
+	}
+
+	return { props: { initColors } };
 }

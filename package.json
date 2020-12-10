@@ -1,17 +1,21 @@
 {
-  "name": "desk-lights-website",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "firebase": "^8.1.2",
-    "next": "^10.0.0",
-    "react": "16.13.1",
-    "react-color": "^2.19.3",
-    "react-dom": "16.13.1"
-  }
+	"name": "desk-lights-website",
+	"description": "Website connected with Firebase Database to control RGBW LED strip",
+	"author": "Gary Tou <garytou2@gmail.com> (https://garytou.com)",
+	"homepage": "lights.garytou.com",
+	"license": "MIT",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start"
+	},
+	"dependencies": {
+		"firebase": "^8.1.2",
+		"next": "^10.0.0",
+		"react": "16.13.1",
+		"react-color": "^2.19.3",
+		"react-dom": "16.13.1"
+	}
 }
