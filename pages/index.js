@@ -1,24 +1,10 @@
 import Head from "next/head";
 import { useState } from "react";
 import { SketchPicker } from "react-color";
-import firebase from "firebase/app";
-import "firebase/database";
+import { firebaseServer } from "../firebaseServer";
+import { firebaseClient } from "../firebaseClient";
 
 export default function Home({ initColors }) {
-	// init app for Firebase Database connection
-	if (!firebase.apps.length) {
-		firebase.initializeApp({
-			apiKey: "AIzaSyBvMgMnlTeE3dzV-gWNeFCx0Y7noPDRChQ",
-			authDomain: "desk-lights-5a43a.firebaseapp.com",
-			databaseURL: "https://desk-lights-5a43a-default-rtdb.firebaseio.com",
-			projectId: "desk-lights-5a43a",
-			storageBucket: "desk-lights-5a43a.appspot.com",
-			messagingSenderId: "1020303207331",
-			appId: "1:1020303207331:web:1710f9c1889e78eacf0816",
-			measurementId: "G-3Q4FL79CTF",
-		});
-	}
-
 	// state for current color
 	const [state, setState] = useState({
 		color: initColors,
@@ -26,7 +12,7 @@ export default function Home({ initColors }) {
 
 	// Update state if there are changes to the color in the database.
 	React.useEffect(() => {
-		firebase
+		firebaseClient
 			.database()
 			.ref("rgbw")
 			.on("value", function (snapshot) {
@@ -58,7 +44,7 @@ export default function Home({ initColors }) {
 	const handleChange = async (color) => {
 		console.log("UPDATE");
 		setState({ ...state, color: color.rgb });
-		firebase.database().ref("rgbw").update(color.rgb);
+		firebaseClient.database().ref("rgbw").update(color.rgb);
 	};
 
 	return (
@@ -231,7 +217,7 @@ export default function Home({ initColors }) {
 
 // Pre-fill current color of LEDs before sending to client
 export async function getServerSideProps() {
-	const snapshot = await firebase.database().ref("rgbw").once("value");
+	const snapshot = await firebaseServer.database().ref("rgbw").once("value");
 
 	// default colors in case of firebase failure.
 	var initColors = {
