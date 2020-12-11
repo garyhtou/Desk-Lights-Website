@@ -1,10 +1,16 @@
 import Head from "next/head";
 import { useState } from "react";
+
 import { SketchPicker } from "react-color";
+
 import { firebaseServer } from "../firebaseServer";
 import { firebaseClient } from "../firebaseClient";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 export default function Home({ initColors }) {
+	const toastDelay = 5000;
+
 	// state for current color
 	const [state, setState] = useState({
 		color: initColors,
@@ -41,10 +47,36 @@ export default function Home({ initColors }) {
 			});
 	});
 
+	React.useEffect(() => {
+		firebaseClient
+			.database()
+			.ref("lockPublic")
+			.on("value", function (snapshot) {
+				if (snapshot.exists()) {
+					if (snapshot.val()) {
+						toast("Whoops! Gary has locked the color of his LEDs");
+					} else {
+						toast("Yay! Gary has unlocked the color of his LEDs");
+					}
+				}
+			});
+	}, []);
+
 	const handleChange = async (color) => {
 		console.log("UPDATE");
 		setState({ ...state, color: color.rgb });
-		firebaseClient.database().ref("rgbw").update(color.rgb);
+		firebaseClient
+			.database()
+			.ref("rgbw")
+			.update(color.rgb)
+			.catch((e) => {
+				console.log(e.code);
+				if (e.code === "PERMISSION_DENIED") {
+					toast("Whoops! Gary has locked the color of his LEDs");
+				} else {
+					toast("Whoops! Error: " + e.code);
+				}
+			});
 	};
 
 	return (
@@ -55,6 +87,17 @@ export default function Home({ initColors }) {
 			</Head>
 
 			<main>
+				<ToastContainer
+					position="top-right"
+					autoClose={toastDelay}
+					hideProgressBar={false}
+					newestOnTop={false}
+					closeOnClick
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover
+				/>
 				<h1 className="title">
 					Welcome to{" "}
 					<span
