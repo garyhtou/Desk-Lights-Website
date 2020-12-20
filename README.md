@@ -1,6 +1,6 @@
 # Desk Lights Website
 
-This website allows anyone on the internet to control the color of my RGBW LEDs! This is the second repository for this project. The first repo, [`garytou2/Desk-Lights`](https://github.com/garytou2/Desk-Lights), covers the hardware, wiring, and programming the Adafruit Feather Huzzah with ESP8266 that is connected to a strip of Adafruit NeoPixel RGBW LEDs. This repo is solely the website that updates the RGB values on Firebase.
+This website allows anyone on the internet to control the color of my RGBW LEDs! This is the second repository for this project. The first repo, [`garyhtou/Desk-Lights`](https://github.com/garyhtou/Desk-Lights), covers the hardware, wiring, and programming the Adafruit Feather Huzzah with ESP8266 that is connected to a strip of Adafruit NeoPixel RGBW LEDs. This repo is solely the website that updates the RGB values on Firebase.
 
 Website built with Next.js (my first Next.js website after working with CRA for a long time). Currently, it's just using the tutorial starter template as I'm starting to learn Next.js.
 
@@ -22,7 +22,7 @@ Also, the color picker is a little misleading since I can not actually turn the 
 ![rgb picker](https://user-images.githubusercontent.com/20099646/101702756-55610a00-3a36-11eb-9c55-8e14f0d800db.png)
 
 ### Firebase Database
-The instructions for setting up the Firebase Database can be found in the other repo at [`garytou2/Desk-Lights`](https://github.com/garytou2/Desk-Lights). However, the database will need to be accessible to the public using the rules below (or you can just change it to Test Mode).
+The instructions for setting up the Firebase Database can be found in the other repo at [`garyhtou/Desk-Lights`](https://github.com/garyhtou/Desk-Lights). However, the database will need to be accessible to the public using the rules below (or you can just change it to Test Mode).
 
 **Database Rules**
 ``` JSON
@@ -56,4 +56,4 @@ The instructions for setting up the Firebase Database can be found in the other 
 
 ------
 
-*Check out the other repository for this project, [`garytou2/Desk-Lights`](https://github.com/garytou2/Desk-Lights), which includes much more information on the hardware, wiring, and programming of the microcontroller connected to LED strip.*
+*Check out the other repository for this project, [`garyhtou/Desk-Lights`](https://github.com/garyhtou/Desk-Lights), which includes much more information on the hardware, wiring, and programming of the microcontroller connected to LED strip.*

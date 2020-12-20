@@ -145,14 +145,14 @@ export default function Home({ initColors }) {
 					<span>
 						<a
 							className="gh-link"
-							href="https://github.com/garytou2/Desk-Lights"
+							href="https://github.com/garyhtou/Desk-Lights"
 						>
 							Desk-Lights
 						</a>{" "}
 						&{" "}
 						<a
 							className="gh-link"
-							href="https://github.com/garytou2/Desk-Lights-Website"
+							href="https://github.com/garyhtou/Desk-Lights-Website"
 						>
 							Desk-Lights-Website
 						</a>

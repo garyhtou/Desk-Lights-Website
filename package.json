@@ -1,7 +1,7 @@
 {
 	"name": "desk-lights-website",
 	"description": "Website connected with Firebase Database to control RGBW LED strip",
-	"author": "Gary Tou <garytou2@gmail.com> (https://garytou.com)",
+	"author": "Gary Tou <gary@garytou.com> (https://garytou.com)",
 	"homepage": "lights.garytou.com",
 	"license": "MIT",
 	"version": "1.0.0",
