@@ -134,6 +134,12 @@ export default function Home({ initColors }) {
 					Why? Because I can't make the LEDs turn black! The saturation is
 					representative of brightness.
 				</p>
+				<p style={{ textAlign: "center", marginBottom: 0 }}>
+					I have gotten requests to set up a live stream so you can see the
+					lights change.
+					<br />
+					Love that idea! Might work on that in the future...
+				</p>
 				<p>
 					See the color picker randomly changing? That's other people messing
 					with my lights!
